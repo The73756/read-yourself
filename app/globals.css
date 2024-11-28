@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Nunito Sans";
+  src: url("./fonts/nunito-sans-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito Sans";
+  src: url("./fonts/nunito-sans-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito Sans";
+  src: url("./fonts/nunito-sans-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .color-transition {
+    @apply transition-colors duration-300;
+  }
+
+  .opacity-transition {
+    @apply transition-opacity hover:opacity-60 duration-300;
+  }
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-1;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brown rounded-md;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-brown/80;
+  }
+}
