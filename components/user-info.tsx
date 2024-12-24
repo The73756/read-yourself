@@ -1,9 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useUserStore } from "@/store/user-store";
+import {useUserStore} from "@/store/user-store";
+import {Button} from "@/components/ui/button";
+import {CustomDialog} from "@/components/custom-dialog";
+import {useState} from "react";
+import {EditUserForm} from "@/components/edit-user-form";
 
 export const UserInfo = () => {
   const user = useUserStore((state) => state.user);
+
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex flex-wrap justify-between items-center gap-6 pb-6 border-b-2 border-brown">
@@ -24,9 +30,18 @@ export const UserInfo = () => {
           {user.phone}
         </Link>
       </div>
-      {/*<Button variant="outline" className="max-sm:flex-grow">*/}
-      {/*  Редактировать*/}
-      {/*</Button>*/}
+      <CustomDialog
+        open={open}
+        onOpenChange={setOpen}
+        trigger={
+          <Button variant="outline" className="max-sm:flex-grow">
+            Редактировать
+          </Button>
+        }
+        title="Редактирование профиля"
+      >
+        <EditUserForm setOpen={setOpen}/>
+      </CustomDialog>
     </div>
   );
 };

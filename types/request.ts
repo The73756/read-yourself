@@ -11,4 +11,5 @@ export interface Request {
     bookId: number;
     requestId: number;
   }[];
+  userId: number
 }

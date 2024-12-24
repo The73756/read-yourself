@@ -5,6 +5,8 @@ import {BookDialog} from "./book-dialog";
 import {useBookStore} from "@/store/book-store";
 import {useRequestStore} from "@/store/request-store";
 import {updateStatus} from "@/api/request-api";
+import {useUserStore} from "@/store/user-store";
+import {useEffect, useState} from "react";
 
 interface RequestCardProps {
   request: Request;
@@ -29,6 +31,13 @@ export const AdminRequestCard = ({request}: RequestCardProps) => {
   const allBooks = useBookStore((state) => state.allBooks);
   const allRequests = useRequestStore((state) => state.allRequests);
   const setAllRequests = useRequestStore((state) => state.setAllRequests);
+  const allUsers = useUserStore((state) => state.allUsers);
+
+  const [currentUser, setCurrentUser] = useState(allUsers.find(u => u.id === request.userId))
+
+  useEffect(() => {
+    setCurrentUser(allUsers.find(u => u.id === request.userId))
+  }, [allUsers]);
 
   const changeStatus = async (newStatusId: number) => {
     try {
@@ -60,6 +69,9 @@ export const AdminRequestCard = ({request}: RequestCardProps) => {
           </h4>
           <p>{request.createDate}</p>
         </div>
+        <h3
+          className="text-brown text-lg">{`От ${currentUser?.surname} ${currentUser?.name[0]}.${currentUser?.patronymic[0]}.` || "От неизвестного"}
+        </h3>
         {request.requestBooks.map((book) => (
           <div key={book.id}>
             {allBooks.find((currentBook) => currentBook.id === book.bookId) && (
