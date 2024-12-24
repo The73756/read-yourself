@@ -92,12 +92,12 @@ export const Filters = ({data}: FiltersProps) => {
   return (
     <div className="flex max-sm:flex-wrap justify-between items-center gap-4">
       <Input
-        className="w-full sm:w-[calc(50%-32px)]"
+        className="w-full sm:w-[calc(50%-32px)] min-w-12"
         placeholder="Поиск..."
         value={search}
         onChange={(e) => handleSearch(e)}
       />
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-x-8 gap-y-2 flex-wrap">
         {(searchAuthorId || searchGenreId) &&
           <Button onClick={resetFilters} variant="ghost" size="sm" className="text-red-600 font-medium">
             <span className="text-sm">Сбросить фильтры</span>

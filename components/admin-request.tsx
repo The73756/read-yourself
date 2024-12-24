@@ -12,11 +12,19 @@ export const AdminRequest = () => {
     setAdminRequests(allRequests.filter(req => req.status.name === "В обработке" || req.status.name === "Принято"))
   }, [allRequests])
 
-  return (
-    <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
-      {adminRequests.map((request) => (
-        <AdminRequestCard key={request.id} request={request}/>
-      ))}
-    </div>
-  );
+  if (adminRequests.length > 0) {
+    return (
+      <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
+        {adminRequests.map((request) => (
+          <AdminRequestCard key={request.id} request={request}/>
+        ))}
+      </div>
+    )
+  } else {
+    return (
+      <h3 className="mt-14 font-bold text-brown text-center text-xl">
+        Заявки отсутствуют
+      </h3>
+    )
+  }
 };

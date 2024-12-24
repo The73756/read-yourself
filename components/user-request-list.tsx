@@ -48,56 +48,64 @@ export const UserRequestList = ({data}: UserRequestListProps) => {
     fetchRequests();
   }, []);
 
-  return (
-    <div className="flex flex-col gap-14">
-      {processRequests.length > 0 && (
-        <div>
-          <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
-            На подтверждении
-          </h3>
-          <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
-            {processRequests.map((request) => (
-              <RequestCard key={request.id} request={request}/>
-            ))}
+  if (requests.length > 0) {
+    return (
+      <div className="flex flex-col gap-14">
+        {processRequests.length > 0 && (
+          <div>
+            <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
+              На подтверждении
+            </h3>
+            <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
+              {processRequests.map((request) => (
+                <RequestCard key={request.id} request={request}/>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      {activeRequests.length > 0 && (
-        <div>
-          <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
-            Текущие заявки
-          </h3>
-          <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
-            {activeRequests.map((request) => (
-              <RequestCard key={request.id} request={request}/>
-            ))}
+        )}
+        {activeRequests.length > 0 && (
+          <div>
+            <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
+              Текущие заявки
+            </h3>
+            <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
+              {activeRequests.map((request) => (
+                <RequestCard key={request.id} request={request}/>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      {rejectedRequests.length > 0 && (
-        <div>
-          <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
-            Отклоненные заявки
-          </h3>
-          <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
-            {rejectedRequests.map((request) => (
-              <RequestCard key={request.id} request={request}/>
-            ))}
+        )}
+        {rejectedRequests.length > 0 && (
+          <div>
+            <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
+              Отклоненные заявки
+            </h3>
+            <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
+              {rejectedRequests.map((request) => (
+                <RequestCard key={request.id} request={request}/>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      {finishRequests.length > 0 && (
-        <div>
-          <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
-            История выполненных заявок
-          </h3>
-          <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
-            {finishRequests.map((request) => (
-              <RequestCard key={request.id} request={request}/>
-            ))}
+        )}
+        {finishRequests.length > 0 && (
+          <div>
+            <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
+              История выполненных заявок
+            </h3>
+            <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
+              {finishRequests.map((request) => (
+                <RequestCard key={request.id} request={request}/>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    )
+  } else {
+    return (
+      <h3 className="mt-14 font-bold text-brown text-center text-xl">
+        Вы еще не делали заявок
+      </h3>
+    )
+  }
 };
