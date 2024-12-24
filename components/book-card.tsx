@@ -1,16 +1,16 @@
-import { Book } from "@/types/book";
+import {Book} from "@/types/book";
 import Image from "next/image";
-import { Button } from "./ui/button";
-import { BookDialog } from "./book-dialog";
-import { CustomDialog } from "@/components/custom-dialog";
-import { CreateRequestForm } from "@/components/create-request-form";
-import { useUserStore } from "@/store/user-store";
+import {Button} from "./ui/button";
+import {BookDialog} from "./book-dialog";
+import {CustomDialog} from "@/components/custom-dialog";
+import {CreateRequestForm} from "@/components/create-request-form";
+import {useUserStore} from "@/store/user-store";
 
 interface BookCardProps {
   book: Book;
 }
 
-export const BookCard = ({ book }: BookCardProps) => {
+export const BookCard = ({book}: BookCardProps) => {
   const isAuth = useUserStore((state) => state.isAuth);
 
   return (
@@ -26,14 +26,14 @@ export const BookCard = ({ book }: BookCardProps) => {
       </div>
       <div className="flex flex-col gap-6">
         <div>
-          <BookDialog book={book} />
+          <BookDialog book={book}/>
           <p className="text-brown">{book.author.name}</p>
         </div>
         <CustomDialog
           trigger={<Button disabled={!isAuth}>Забронировать</Button>}
           title="Заявка на бронь книг"
         >
-          <CreateRequestForm currentBook={book} />
+          <CreateRequestForm currentBooks={[book]}/>
         </CustomDialog>
       </div>
     </div>

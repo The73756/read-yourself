@@ -1,14 +1,16 @@
 "use client";
-import { Button } from "./ui/button";
-import { Request } from "@/types/request";
-import { BookDialog } from "./book-dialog";
-import { useBookStore } from "@/store/book-store";
+import {Button} from "./ui/button";
+import {Request} from "@/types/request";
+import {BookDialog} from "./book-dialog";
+import {useBookStore} from "@/store/book-store";
+import {CreateRequestForm} from "@/components/create-request-form";
+import {CustomDialog} from "@/components/custom-dialog";
 
 interface RequestCardProps {
   request: Request;
 }
 
-export const RequestCard = ({ request }: RequestCardProps) => {
+export const RequestCard = ({request}: RequestCardProps) => {
   const allBooks = useBookStore((state) => state.allBooks);
 
   return (
@@ -50,7 +52,18 @@ export const RequestCard = ({ request }: RequestCardProps) => {
         (request.status.name === "В обработке" ? (
           <Button variant="outline">Отменить</Button>
         ) : (
-          <Button>Повторить</Button>
+          <CustomDialog
+            trigger={
+              <Button>Повторить</Button>
+            }
+            title="Заявка на бронь книг"
+          >
+            <CreateRequestForm
+              currentBooks={request.requestBooks.map(
+                reqBook => allBooks.find((b) => b.id === reqBook.bookId))
+              }
+            />
+          </CustomDialog>
         ))}
     </div>
   );

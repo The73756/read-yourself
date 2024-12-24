@@ -1,17 +1,17 @@
 "use client";
-import { useBookStore } from "@/store/book-store";
-import { RequestCard } from "./request-card";
-import { getRequests } from "@/api";
-import { useRequestStore } from "@/store/request-store";
-import { useUserStore } from "@/store/user-store";
-import { Book } from "@/types/book";
-import { useEffect } from "react";
+import {useBookStore} from "@/store/book-store";
+import {RequestCard} from "./request-card";
+import {getRequests} from "@/api";
+import {useRequestStore} from "@/store/request-store";
+import {useUserStore} from "@/store/user-store";
+import {Book} from "@/types/book";
+import {useEffect} from "react";
 
 interface UserRequestListProps {
   data: Book[];
 }
 
-export const UserRequestList = ({ data }: UserRequestListProps) => {
+export const UserRequestList = ({data}: UserRequestListProps) => {
   const user = useUserStore((state) => state.user);
   const requests = useRequestStore((state) => state.requests);
   const setRequests = useRequestStore((state) => state.setRequests);
@@ -57,19 +57,7 @@ export const UserRequestList = ({ data }: UserRequestListProps) => {
           </h3>
           <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
             {processRequests.map((request) => (
-              <RequestCard key={request.id} request={request} />
-            ))}
-          </div>
-        </div>
-      )}
-      {rejectedRequests.length > 0 && (
-        <div>
-          <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
-            Отклоненные заявки
-          </h3>
-          <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
-            {rejectedRequests.map((request) => (
-              <RequestCard key={request.id} request={request} />
+              <RequestCard key={request.id} request={request}/>
             ))}
           </div>
         </div>
@@ -81,7 +69,19 @@ export const UserRequestList = ({ data }: UserRequestListProps) => {
           </h3>
           <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
             {activeRequests.map((request) => (
-              <RequestCard key={request.id} request={request} />
+              <RequestCard key={request.id} request={request}/>
+            ))}
+          </div>
+        </div>
+      )}
+      {rejectedRequests.length > 0 && (
+        <div>
+          <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
+            Отклоненные заявки
+          </h3>
+          <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
+            {rejectedRequests.map((request) => (
+              <RequestCard key={request.id} request={request}/>
             ))}
           </div>
         </div>
@@ -89,11 +89,11 @@ export const UserRequestList = ({ data }: UserRequestListProps) => {
       {finishRequests.length > 0 && (
         <div>
           <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
-            История заявок
+            История выполненных заявок
           </h3>
           <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
             {finishRequests.map((request) => (
-              <RequestCard key={request.id} request={request} />
+              <RequestCard key={request.id} request={request}/>
             ))}
           </div>
         </div>

@@ -1,29 +1,22 @@
 "use client";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Button } from "./ui/button";
-import { MouseEvent, useState } from "react";
-import { Book } from "@/types/book";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useBookStore } from "@/store/book-store";
-import { DatePicker } from "./date-picker";
-import { format } from "date-fns";
-import { ru } from "date-fns/locale";
-import { createRequest } from "@/api";
-import { useUserStore } from "@/store/user-store";
-import { useRequestStore } from "@/store/request-store";
-import { DialogClose } from "./ui/dialog";
+import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group";
+import {Button} from "./ui/button";
+import {MouseEvent, useState} from "react";
+import {Book} from "@/types/book";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {useBookStore} from "@/store/book-store";
+import {DatePicker} from "./date-picker";
+import {format} from "date-fns";
+import {createRequest} from "@/api";
+import {useUserStore} from "@/store/user-store";
+import {useRequestStore} from "@/store/request-store";
+import {DialogClose} from "./ui/dialog";
 
 interface CreateRequestFormProps {
-  currentBook?: Book;
+  currentBooks?: Book[];
 }
 
-export const CreateRequestForm = ({ currentBook }: CreateRequestFormProps) => {
+export const CreateRequestForm = ({currentBooks}: CreateRequestFormProps) => {
   const allBooks = useBookStore((state) => state.allBooks);
   const user = useUserStore((state) => state.user);
   const requests = useRequestStore((state) => state.requests);
@@ -31,12 +24,12 @@ export const CreateRequestForm = ({ currentBook }: CreateRequestFormProps) => {
 
   const [date, setDate] = useState<Date>();
   const [selectedBooks, setSelectedBooks] = useState<Book[]>(
-    currentBook ? [currentBook] : []
+    currentBooks?.length > 0 ? currentBooks : []
   );
   const [requestBooks, setRequestBooks] = useState<Book[]>(
-    currentBook ? [currentBook] : []
+    currentBooks?.length > 0 ? currentBooks : []
   );
-  const [value, setValue] = useState(currentBook ? currentBook.title : "");
+  const [value, setValue] = useState("")
 
   const handleSelectItemClick = (book: Book) => {
     if (!selectedBooks.some((selectedBook) => selectedBook.id === book.id)) {
@@ -110,7 +103,7 @@ export const CreateRequestForm = ({ currentBook }: CreateRequestFormProps) => {
             ))}
           </SelectContent>
         </Select>
-        <DatePicker date={date} setDate={setDate} />
+        <DatePicker date={date} setDate={setDate}/>
       </div>
       <DialogClose asChild>
         <Button
