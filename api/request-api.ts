@@ -1,12 +1,12 @@
-import { Book } from "@/types/book";
-import { apiUrl } from ".";
+import {Book} from "@/types/book";
+import {apiUrl} from ".";
 
 export const getRequests = async (userId: number) => {
   try {
     if (apiUrl) {
       const res = await fetch(
         apiUrl +
-          `/requests?_embed=requestBooks&_expand=status&userId=${userId}&_sort=createDate&_order=desc`,
+        `/requests?_embed=requestBooks&_expand=status&userId=${userId}&_sort=createDate&_order=desc`,
         {
           method: "GET",
           headers: {
@@ -34,7 +34,7 @@ export const getAllRequests = async () => {
     if (apiUrl) {
       const res = await fetch(
         apiUrl +
-          `/requests?_embed=requestBooks&_expand=status&_sort=createDate&_order=desc`,
+        `/requests?_embed=requestBooks&_expand=status&_sort=createDate&_order=desc`,
         {
           method: "GET",
           headers: {
@@ -120,6 +120,35 @@ export const createRequest = async (
         ...requestData,
         requestBooks,
       };
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateStatus = async (requestId: number, statusId: number) => {
+  try {
+    if (apiUrl) {
+      const res = await fetch(
+        apiUrl +
+        `/requests/${requestId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({statusId}),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          next: {
+            revalidate: false,
+            tags: ["request"],
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error("Failed update requests");
+      }
+
+      return res.json();
     }
   } catch (error) {
     console.error(error);
