@@ -154,3 +154,31 @@ export const updateStatus = async (requestId: number, statusId: number) => {
     console.error(error);
   }
 };
+
+export const deleteRequest = async (requestId: number) => {
+  try {
+    if (apiUrl) {
+      const res = await fetch(
+        apiUrl +
+        `/requests/${requestId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          next: {
+            revalidate: false,
+            tags: ["request"],
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error("Failed update requests");
+      }
+
+      return res.json();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

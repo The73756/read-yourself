@@ -5,6 +5,8 @@ import {BookDialog} from "./book-dialog";
 import {useBookStore} from "@/store/book-store";
 import {CreateRequestForm} from "@/components/create-request-form";
 import {CustomDialog} from "@/components/custom-dialog";
+import {deleteRequest} from "@/api/request-api";
+import {useRequestStore} from "@/store/request-store";
 
 interface RequestCardProps {
   request: Request;
@@ -12,6 +14,21 @@ interface RequestCardProps {
 
 export const RequestCard = ({request}: RequestCardProps) => {
   const allBooks = useBookStore((state) => state.allBooks);
+  const requests = useRequestStore((state) => state.requests);
+  const setRequests = useRequestStore((state) => state.setRequests);
+
+  const cancelRequest = async () => {
+    try {
+      const res = await deleteRequest(request.id)
+      if (res) {
+        setRequests(requests.filter(req =>
+          req.id !== request.id
+        ))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <div className="flex flex-col justify-between gap-6">
@@ -50,7 +67,7 @@ export const RequestCard = ({request}: RequestCardProps) => {
       </div>
       {request.status.name === "Принято" ||
         (request.status.name === "В обработке" ? (
-          <Button variant="outline">Отменить</Button>
+          <Button onClick={cancelRequest} variant="outline">Отменить</Button>
         ) : (
           <CustomDialog
             trigger={
