@@ -1,7 +1,7 @@
 "use client";
-import { ChangeEvent, useEffect } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import {ChangeEvent, useEffect} from "react";
+import {Button} from "./ui/button";
+import {Input} from "./ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,15 +9,15 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowDownIcon } from "./shared/arrow-down-icon";
-import { CustomDialog } from "./custom-dialog";
-import { FiltersForm } from "./filters-form";
-import { getBooks } from "@/api";
-import { useBookStore } from "@/store/book-store";
-import { GetBooksResponse } from "@/types/book";
-import { AuthorGenre } from "@/types/author-genre";
-import { useAuthorStore } from "@/store/author-store";
-import { useGenreStore } from "@/store/genre-store";
+import {ArrowDownIcon} from "./shared/arrow-down-icon";
+import {CustomDialog} from "./custom-dialog";
+import {FiltersForm} from "./filters-form";
+import {getBooks} from "@/api";
+import {useBookStore} from "@/store/book-store";
+import {GetBooksResponse} from "@/types/book";
+import {AuthorGenre} from "@/types/author-genre";
+import {useAuthorStore} from "@/store/author-store";
+import {useGenreStore} from "@/store/genre-store";
 
 interface FiltersProps {
   data: {
@@ -26,7 +26,7 @@ interface FiltersProps {
   };
 }
 
-export const Filters = ({ data }: FiltersProps) => {
+export const Filters = ({data}: FiltersProps) => {
   const search = useBookStore((state) => state.search);
   const sort = useBookStore((state) => state.sort);
   const setSort = useBookStore((state) => state.setSort);
@@ -38,10 +38,12 @@ export const Filters = ({ data }: FiltersProps) => {
   const authors = useAuthorStore((state) => state.authors);
   const setAuthors = useAuthorStore((state) => state.setAuthors);
   const searchAuthorId = useAuthorStore((state) => state.searchAuthorId);
+  const setSearchAuthorId = useAuthorStore((state) => state.setSearchAuthorId);
 
   const genres = useGenreStore((state) => state.genres);
   const setGenres = useGenreStore((state) => state.setGenres);
   const searchGenreId = useGenreStore((state) => state.searchGenreId);
+  const setSearchGenreId = useGenreStore((state) => state.setSearchGenreId);
 
   useEffect(() => {
     setAuthors(data.authors);
@@ -50,7 +52,7 @@ export const Filters = ({ data }: FiltersProps) => {
 
   const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    const { books, totalCount } = (await getBooks(
+    const {books, totalCount} = (await getBooks(
       e.target.value,
       1,
       ...sort.split(" "),
@@ -64,7 +66,7 @@ export const Filters = ({ data }: FiltersProps) => {
 
   const sortHandler = async (value: string) => {
     setSort(value);
-    const { books } = (await getBooks(
+    const {books} = (await getBooks(
       search,
       1,
       ...value.split(" ")
@@ -73,14 +75,33 @@ export const Filters = ({ data }: FiltersProps) => {
     setCurrentPage(1);
   };
 
+  const resetFilters = async () => {
+    const {books, totalCount} = (await getBooks(
+      "",
+      1,
+      ...sort.split(" "),
+    )) as GetBooksResponse;
+    setSearchAuthorId(undefined);
+    setSearchGenreId(undefined);
+    setSearch("");
+    setBooks(books);
+    setCurrentPage(1);
+    setPages(totalCount);
+  }
+
   return (
     <div className="flex max-sm:flex-wrap justify-between items-center gap-4">
       <Input
         className="w-full sm:w-[calc(50%-32px)]"
         placeholder="Поиск..."
+        value={search}
         onChange={(e) => handleSearch(e)}
       />
       <div className="flex items-center gap-8">
+        {(searchAuthorId || searchGenreId) &&
+          <Button onClick={resetFilters} variant="ghost" size="sm" className="text-red-600 font-medium">
+            <span className="text-sm">Сбросить фильтры</span>
+          </Button>}
         <CustomDialog
           trigger={
             <Button size="sm" variant="ghost">
@@ -89,13 +110,13 @@ export const Filters = ({ data }: FiltersProps) => {
           }
           title="Фильтры"
         >
-          <FiltersForm authors={authors} genres={genres} />
+          <FiltersForm authors={authors} genres={genres}/>
         </CustomDialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="ghost">
               Сортировка
-              <ArrowDownIcon />
+              <ArrowDownIcon/>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-max">
