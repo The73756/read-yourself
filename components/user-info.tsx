@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { useUserStore } from "@/store/user-store";
 
 export const UserInfo = () => {
@@ -25,9 +24,9 @@ export const UserInfo = () => {
           {user.phone}
         </Link>
       </div>
-      <Button variant="outline" className="max-sm:flex-grow">
-        Редактировать
-      </Button>
+      {/*<Button variant="outline" className="max-sm:flex-grow">*/}
+      {/*  Редактировать*/}
+      {/*</Button>*/}
     </div>
   );
 };

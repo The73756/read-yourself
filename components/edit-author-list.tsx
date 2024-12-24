@@ -16,26 +16,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "./ui/button";
 import { EditAuthorForm } from "./edit-author-form";
+import { useAuthorStore } from "@/store/author-store";
+import { AuthorGenre } from "@/types/author-genre";
 
 const formSchema = z.object({
-  author: z.string({required_error: 'Это обязательное поле'}),
+  author: z.string({ required_error: "Это обязательное поле" }),
 });
 
-const authors = [
-  { id: 1, name: "Иванов Иван" },
-  { id: 2, name: "Сергеев Сергей" },
-  { id: 3, name: "Петров Петр" },
-];
+interface EditAuthorListProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-export const EditAuthorList = () => {
+export const EditAuthorList = ({ setOpen }: EditAuthorListProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  const [editAuthor, setEditAuthor] = useState<{ id: number; name: string }>();
+  const [editAuthor, setEditAuthor] = useState<AuthorGenre>();
+  const authors = useAuthorStore((state) => state.authors);
 
   useEffect(() => {
     const selected = authors.find(
@@ -92,7 +93,13 @@ export const EditAuthorList = () => {
           </Button>
         </DialogClose>
       )}
-      {editAuthor && <EditAuthorForm key={editAuthor.id} author={editAuthor} />}
+      {editAuthor && (
+        <EditAuthorForm
+          key={editAuthor.id}
+          author={editAuthor}
+          setOpen={setOpen}
+        />
+      )}
     </>
   );
 };

@@ -1,32 +1,25 @@
-import { AdminAuthor } from "@/components/admin-author";
-import { AdminBook } from "@/components/admin-book";
+import { getAllBooks, getAllRequests, getAuthors, getGenres } from "@/api";
 import { AdminCheck } from "@/components/admin-check";
-import { AdminGenre } from "@/components/admin-genre";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AdminTabs } from "@/components/admin-tabs";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { AuthorGenre } from "@/types/author-genre";
+import { Book } from "@/types/book";
+import { Request } from "@/types/request";
 
-export default function Admin() {
+export default async function Admin() {
+  const allBooks = (await getAllBooks()) as Book[];
+  const authors = (await getAuthors()) as AuthorGenre[];
+  const genres = (await getGenres()) as AuthorGenre[];
+  const allRequests = (await getAllRequests()) as Request[];
+
   return (
     <AdminCheck>
-      <div className="h-full container">
-        <Tabs defaultValue="book" className="flex flex-col items-center w-full">
-          <TabsList className="mb-12 sm:mb-36">
-            <TabsTrigger value="book">Книги</TabsTrigger>
-            <TabsTrigger value="author">Авторы</TabsTrigger>
-            <TabsTrigger value="genre">Жанры</TabsTrigger>
-            {/* <TabsTrigger value="request">Заявки</TabsTrigger> */}
-          </TabsList>
-          <TabsContent value="book">
-            <AdminBook />
-          </TabsContent>
-          <TabsContent value="author">
-            <AdminAuthor />
-          </TabsContent>
-          <TabsContent value="genre">
-            <AdminGenre />
-          </TabsContent>
-          {/* <TabsContent value="request">...</TabsContent> */}
-        </Tabs>
-      </div>
+      <>
+        <Header />
+        <AdminTabs data={{ allBooks, authors, genres, allRequests }} />
+        <Footer />
+      </>
     </AdminCheck>
   );
 }

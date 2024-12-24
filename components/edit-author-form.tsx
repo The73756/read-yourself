@@ -12,26 +12,56 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DialogClose } from "./ui/dialog";
+import { Dispatch, SetStateAction } from "react";
+import { editAuthor } from "@/api";
+import { useToast } from "@/hooks/use-toast";
+import { useAuthorStore } from "@/store/author-store";
+import { AuthorGenre } from "@/types/author-genre";
 
 const formSchema = z.object({
-  name: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
+  name: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
 });
 
 interface EditAuthorFormProps {
-  author: { id: number; name: string };
+  author: AuthorGenre;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const EditAuthorForm = ({ author }: EditAuthorFormProps) => {
+export const EditAuthorForm = ({ author, setOpen }: EditAuthorFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: author.name,
     },
   });
+  const authors = useAuthorStore((state) => state.authors);
+  const setAuthors = useAuthorStore((state) => state.setAuthors);
+  const { toast } = useToast();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    form.reset();
+    try {
+      const updatedAuthor = await editAuthor({
+        id: author.id,
+        ...values,
+      });
+      if (updatedAuthor) {
+        form.reset();
+        setAuthors(
+          authors.map((a) => (a.id === author.id ? updatedAuthor : a))
+        );
+        setOpen(false);
+        toast({
+          title: "Автор успешно изменен",
+        });
+      } else {
+        toast({
+          title: "Ошибка редактирования",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

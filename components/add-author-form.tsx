@@ -11,22 +11,49 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Dispatch, SetStateAction } from "react";
+import { addAuthor } from "@/api";
+import { useAuthorStore } from "@/store/author-store";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  name: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
+  name: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
 });
 
-export const AddAuthorForm = () => {
+interface AddAuthorFormProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const AddAuthorForm = ({ setOpen }: AddAuthorFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
     },
   });
+  const authors = useAuthorStore((state) => state.authors);
+  const setAuthors = useAuthorStore((state) => state.setAuthors);
+  const { toast } = useToast();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    form.reset();
+    try {
+      const newAuthor = await addAuthor(values);
+      if (newAuthor) {
+        form.reset();
+        setAuthors([...authors, newAuthor]);
+        setOpen(false);
+        toast({
+          title: "Автор успешно добавлен",
+        });
+      } else {
+        toast({
+          title: "Ошибка добавления",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

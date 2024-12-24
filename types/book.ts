@@ -7,3 +7,8 @@ export interface Book {
   year: number;
   genre: { id: number; name: string };
 }
+
+export interface GetBooksResponse {
+  books: Book[];
+  totalCount: number;
+}

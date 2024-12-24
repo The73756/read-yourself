@@ -7,15 +7,12 @@ import { CustomDialog } from "./custom-dialog";
 import { CreateRequestForm } from "./create-request-form";
 import { useUserStore } from "@/store/user-store";
 import { DialogClose } from "./ui/dialog";
-import { useBookStore } from "@/store/book-store";
 
 export const Header = () => {
   const auth = useUserStore((state) => state.isAuth);
   const user = useUserStore((state) => state.user);
   const setIsAuth = useUserStore((state) => state.setIsAuth);
   const setUser = useUserStore((state) => state.setUser);
-
-  const books = useBookStore((state) => state.books);
 
   const logout = () => {
     setUser({});
@@ -48,7 +45,7 @@ export const Header = () => {
                 }
                 title="Заявка на бронь книг"
               >
-                <CreateRequestForm books={books} />
+                <CreateRequestForm />
               </CustomDialog>
               <CustomDialog
                 trigger={

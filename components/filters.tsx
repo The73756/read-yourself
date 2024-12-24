@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -14,14 +14,63 @@ import { CustomDialog } from "./custom-dialog";
 import { FiltersForm } from "./filters-form";
 import { getBooks } from "@/api";
 import { useBookStore } from "@/store/book-store";
+import { GetBooksResponse } from "@/types/book";
+import { AuthorGenre } from "@/types/author-genre";
+import { useAuthorStore } from "@/store/author-store";
+import { useGenreStore } from "@/store/genre-store";
 
-export const Filters = () => {
-  const [sort, setSort] = useState("alphabet");
+interface FiltersProps {
+  data: {
+    authors: AuthorGenre[];
+    genres: AuthorGenre[];
+  };
+}
+
+export const Filters = ({ data }: FiltersProps) => {
+  const search = useBookStore((state) => state.search);
+  const sort = useBookStore((state) => state.sort);
+  const setSort = useBookStore((state) => state.setSort);
   const setBooks = useBookStore((state) => state.setBooks);
+  const setSearch = useBookStore((state) => state.setSearch);
+  const setCurrentPage = useBookStore((state) => state.setCurrentPage);
+  const setPages = useBookStore((state) => state.setPages);
+
+  const authors = useAuthorStore((state) => state.authors);
+  const setAuthors = useAuthorStore((state) => state.setAuthors);
+  const searchAuthorId = useAuthorStore((state) => state.searchAuthorId);
+
+  const genres = useGenreStore((state) => state.genres);
+  const setGenres = useGenreStore((state) => state.setGenres);
+  const searchGenreId = useGenreStore((state) => state.searchGenreId);
+
+  useEffect(() => {
+    setAuthors(data.authors);
+    setGenres(data.genres);
+  }, [data.authors, data.genres]);
 
   const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
-    const searchBooks = await getBooks(e.target.value);
-    setBooks(searchBooks);
+    setSearch(e.target.value);
+    const { books, totalCount } = (await getBooks(
+      e.target.value,
+      1,
+      ...sort.split(" "),
+      searchAuthorId,
+      searchGenreId
+    )) as GetBooksResponse;
+    setBooks(books);
+    setCurrentPage(1);
+    setPages(totalCount);
+  };
+
+  const sortHandler = async (value: string) => {
+    setSort(value);
+    const { books } = (await getBooks(
+      search,
+      1,
+      ...value.split(" ")
+    )) as GetBooksResponse;
+    setBooks(books);
+    setCurrentPage(1);
   };
 
   return (
@@ -40,7 +89,7 @@ export const Filters = () => {
           }
           title="Фильтры"
         >
-          <FiltersForm />
+          <FiltersForm authors={authors} genres={genres} />
         </CustomDialog>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -50,12 +99,21 @@ export const Filters = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-max">
-            <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
-              <DropdownMenuRadioItem value="alphabet">
-                По алфавиту
+            <DropdownMenuRadioGroup
+              value={sort}
+              onValueChange={(value) => sortHandler(value)}
+            >
+              <DropdownMenuRadioItem value="title asc">
+                По алфавиту А-Я
               </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="year">
-                По году издания
+              <DropdownMenuRadioItem value="title desc">
+                По алфавиту Я-А
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="year asc">
+                Сначала старые
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="year desc">
+                Сначала новые
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useUserStore } from "@/store/user-store";
 import { login } from "@/api";
 import { Dispatch, SetStateAction } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   login: z
@@ -36,6 +37,7 @@ export const LoginForm = ({ setOpen }: LoginFormProps) => {
   });
   const setUser = useUserStore((state) => state.setUser);
   const setIsAuth = useUserStore((state) => state.setIsAuth);
+  const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
@@ -47,6 +49,10 @@ export const LoginForm = ({ setOpen }: LoginFormProps) => {
         setIsAuth(true);
         setOpen(false);
       } else {
+        toast({
+          title: "Ошибка авторизации",
+          description: "Неверный пароль или логин",
+        });
       }
     } catch (error) {
       console.error(error);

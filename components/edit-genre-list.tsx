@@ -16,36 +16,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "./ui/button";
-import { EditAuthorForm } from "./edit-author-form";
+import { EditGenreForm } from "./edit-genre-form";
+import { useGenreStore } from "@/store/genre-store";
+import { AuthorGenre } from "@/types/author-genre";
 
 const formSchema = z.object({
-  author: z.string({required_error: 'Это обязательное поле'}),
+  genre: z.string({ required_error: "Это обязательное поле" }),
 });
 
-const genres = [
-  { id: 1, name: "Проза" },
-  { id: 2, name: "Роман" },
-  { id: 3, name: "Сказка" },
-  { id: 4, name: "Повесть" },
-  { id: 5, name: "Рассказ" },
-];
+interface EditGenreListProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-export const EditGenreList = () => {
-  // поправить код
+export const EditGenreList = ({ setOpen }: EditGenreListProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  const [editAuthor, setEditAuthor] = useState<{ id: number; name: string }>();
+  const [editGenre, setEditGenre] = useState<AuthorGenre>();
+  const genres = useGenreStore((state) => state.genres);
 
   useEffect(() => {
     const selected = genres.find(
-      (author) => author.name === form.getValues("author")
+      (genre) => genre.name === form.getValues("genre")
     );
-    setEditAuthor(selected);
-  }, [form.watch("author")]);
+    setEditGenre(selected);
+  }, [form.watch("genre")]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -60,7 +58,7 @@ export const EditGenreList = () => {
         >
           <FormField
             control={form.control}
-            name="author"
+            name="genre"
             render={({ field }) => (
               <FormItem>
                 <Select
@@ -75,9 +73,9 @@ export const EditGenreList = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {genres.map((author) => (
-                      <SelectItem key={author.id} value={author.name}>
-                        {author.name}
+                    {genres.map((genre) => (
+                      <SelectItem key={genre.id} value={genre.name}>
+                        {genre.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -88,14 +86,16 @@ export const EditGenreList = () => {
           />
         </form>
       </Form>
-      {!editAuthor && (
+      {!editGenre && (
         <DialogClose asChild>
           <Button className="w-full" variant="outline">
             Отмена
           </Button>
         </DialogClose>
       )}
-      {editAuthor && <EditAuthorForm key={editAuthor.id} author={editAuthor} />}
+      {editGenre && (
+        <EditGenreForm key={editGenre.id} genre={editGenre} setOpen={setOpen} />
+      )}
     </>
   );
 };

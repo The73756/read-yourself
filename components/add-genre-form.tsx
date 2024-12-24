@@ -11,24 +11,50 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Dispatch, SetStateAction } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useGenreStore } from "@/store/genre-store";
+import { addGenre } from "@/api";
 
 const formSchema = z.object({
-  name: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
+  name: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
 });
 
-export const AddGenreForm = () => {
+interface AddGenreFormProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const AddGenreForm = ({ setOpen }: AddGenreFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
     },
   });
+  const genres = useGenreStore((state) => state.genres);
+  const setGenres = useGenreStore((state) => state.setGenres);
+  const { toast } = useToast();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    form.reset();
+    try {
+      const newGenre = await addGenre(values);
+      if (newGenre) {
+        form.reset();
+        setGenres([...genres, newGenre]);
+        setOpen(false);
+        toast({
+          title: "Жанр успешно добавлен",
+        });
+      } else {
+        toast({
+          title: "Ошибка добавления",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
-
   return (
     <Form {...form}>
       <form

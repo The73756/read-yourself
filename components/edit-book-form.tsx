@@ -20,48 +20,72 @@ import {
 } from "@/components/ui/select";
 import { Book } from "@/types/book";
 import { DialogClose } from "./ui/dialog";
+import { Dispatch, SetStateAction } from "react";
+import { useAuthorStore } from "@/store/author-store";
+import { useBookStore } from "@/store/book-store";
+import { useGenreStore } from "@/store/genre-store";
+import { useToast } from "@/hooks/use-toast";
+import { editBook } from "@/api";
 
-const formSchema = z.object({
-  title: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
-  author: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
-  genre: z.string({required_error: 'Это обязательное поле'}).min(1).max(20),
+export const formSchema = z.object({
+  title: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
+  author: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
+  genre: z.string({ required_error: "Это обязательное поле" }).min(1).max(20),
   year: z.coerce.number(),
-  desc: z.string({required_error: 'Это обязательное поле'}),
+  desc: z.string({ required_error: "Это обязательное поле" }),
+  image: z.string({ required_error: "Это обязательное поле" }),
 });
-
-const genres = [
-  { id: 1, name: "xfgf" },
-  { id: 2, name: "dfhdfb" },
-  { id: 3, name: "xsdfgsfgf" },
-  { id: 4, name: "xfxcvxcvgf" },
-  { id: 5, name: "xfgsdfsf" },
-];
-
-const authors = [
-  { id: 1, name: "erhtsjyk" },
-  { id: 2, name: "sdfg" },
-  { id: 3, name: "esrht" },
-];
 
 interface EditBookFormProps {
   book: Book;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const EditBookForm = ({ book }: EditBookFormProps) => {
+export const EditBookForm = ({ book, setOpen }: EditBookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: book.title,
-      author: authors[0].name, // заглушка
-      genre: genres[0].name, // заглушка
+      author: book.author.name,
+      genre: book.genre.name,
       year: book.year,
       desc: book.desc,
+      image: book.image,
     },
   });
+  const authors = useAuthorStore((state) => state.authors);
+  const genres = useGenreStore((state) => state.genres);
+  const setAllBooks = useBookStore((state) => state.setAllBooks);
+  const allBooks = useBookStore((state) => state.allBooks);
+  const { toast } = useToast();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    form.reset();
+    try {
+      const updatedBook = await editBook({
+        id: book.id,
+        title: values.title,
+        authorId: authors.find((author) => author.name === values.author).id,
+        genreId: genres.find((genre) => genre.name === values.genre).id,
+        image: values.image,
+        year: values.year,
+        desc: values.desc,
+      });
+      if (updatedBook) {
+        form.reset();
+        setAllBooks(allBooks.map((b) => (b.id === book.id ? updatedBook : b)));
+        setOpen(false);
+        toast({
+          title: "Книга успешно изменена",
+        });
+      } else {
+        toast({
+          title: "Ошибка редактирования",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -147,6 +171,18 @@ export const EditBookForm = ({ book }: EditBookFormProps) => {
             <FormItem>
               <FormControl>
                 <Input placeholder="Описание" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Ссылка на изображение" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

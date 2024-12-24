@@ -14,11 +14,18 @@ import { useUserStore } from "@/store/user-store";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction } from "react";
 import { registrate } from "@/api";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  surname: z.string({required_error: 'Это обязательное поле'}).min(1, { message: "Это обязательное поле" }),
-  name: z.string({required_error: 'Это обязательное поле'}).min(1, { message: "Это обязательное поле" }),
-  patronymic: z.string({required_error: 'Это обязательное поле'}).min(1, { message: "Это обязательное поле" }),
+  surname: z
+    .string({ required_error: "Это обязательное поле" })
+    .min(1, { message: "Это обязательное поле" }),
+  name: z
+    .string({ required_error: "Это обязательное поле" })
+    .min(1, { message: "Это обязательное поле" }),
+  patronymic: z
+    .string({ required_error: "Это обязательное поле" })
+    .min(1, { message: "Это обязательное поле" }),
   login: z
     .string()
     .min(4, { message: "Слишком короткий логин" })
@@ -29,8 +36,13 @@ const formSchema = z.object({
     .regex(/^\+?[0-9]{10,15}$/, {
       message: "Некорректный номер телефона",
     }),
-  email: z.string({required_error: 'Это обязательное поле'}).email({ message: "Некорректный e-mail" }),
-  password: z.string({required_error: 'Это обязательное поле'}).min(8).max(50),
+  email: z
+    .string({ required_error: "Это обязательное поле" })
+    .email({ message: "Некорректный e-mail" }),
+  password: z
+    .string({ required_error: "Это обязательное поле" })
+    .min(8)
+    .max(50),
 });
 
 interface RegFormProps {
@@ -43,6 +55,7 @@ export const RegForm = ({ setOpen }: RegFormProps) => {
   });
   const setUser = useUserStore((state) => state.setUser);
   const setIsAuth = useUserStore((state) => state.setIsAuth);
+  const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -54,6 +67,10 @@ export const RegForm = ({ setOpen }: RegFormProps) => {
         setIsAuth(true);
         setOpen(false);
       } else {
+        toast({
+          title: "Ошибка регистрации",
+          description: "Такой логин уже используется",
+        });
       }
     } catch (error) {
       console.error(error);

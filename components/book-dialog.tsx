@@ -10,12 +10,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Book } from "@/types/book";
+import { CreateRequestForm } from "./create-request-form";
+import { CustomDialog } from "./custom-dialog";
+import { useUserStore } from "@/store/user-store";
 
 interface BookDialogProps {
   book: Book;
 }
 
 export const BookDialog = ({ book }: BookDialogProps) => {
+  const isAuth = useUserStore((state) => state.isAuth);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -44,7 +49,16 @@ export const BookDialog = ({ book }: BookDialogProps) => {
           </DialogHeader>
           <p>{book.desc}</p>
           <DialogFooter className="mt-auto">
-            <Button className="w-full">Забронировать</Button>
+            <CustomDialog
+              trigger={
+                <Button className="w-full" disabled={!isAuth}>
+                  Забронировать
+                </Button>
+              }
+              title="Заявка на бронь книг"
+            >
+              <CreateRequestForm currentBook={book} />
+            </CustomDialog>
           </DialogFooter>
         </div>
       </DialogContent>

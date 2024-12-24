@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { AuthCheck } from "@/components/auth-check";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,13 +17,10 @@ export default function RootLayout({
       <body
         className={`font-nunito-sans antialiased min-h-screen flex bg-beige-light flex-col gap-8`}
       >
-        <AuthCheck>
-          <>
-            <Header />
-            {children}
-            <Footer />
-          </>
-        </AuthCheck>
+        <>
+          {children}
+          <Toaster />
+        </>
       </body>
     </html>
   );

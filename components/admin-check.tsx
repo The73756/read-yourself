@@ -9,11 +9,17 @@ interface AdminCheckProps {
 
 export const AdminCheck = ({ children }: AdminCheckProps) => {
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
+  const userData = localStorage.getItem("user");
+  const user = userData ? JSON.parse(userData) : null;
+  const setIsAuth = useUserStore((state) => state.setIsAuth);
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     if (user?.role !== "ADMIN") {
       router.push("/");
+    } else {
+      setUser(user);
+      setIsAuth(true);
     }
   }, [user, router]);
 

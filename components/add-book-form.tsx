@@ -18,38 +18,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuthorStore } from "@/store/author-store";
+import { useGenreStore } from "@/store/genre-store";
+import { addBook } from "@/api";
+import { useBookStore } from "@/store/book-store";
+import { Dispatch, SetStateAction } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  title: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
-  author: z.string({required_error: 'Это обязательное поле'}).min(1).max(50),
-  genre: z.string({required_error: 'Это обязательное поле'}).min(1).max(20),
-  year: z.coerce.number(),
-  desc: z.string({required_error: 'Это обязательное поле'}),
-  image: z.string({required_error: 'Это обязательное поле'}).min(1),
+  title: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
+  author: z.string({ required_error: "Это обязательное поле" }).min(1).max(50),
+  genre: z.string({ required_error: "Это обязательное поле" }).min(1).max(20),
+  year: z.coerce.number({
+    required_error: "Это обязательное поле",
+    invalid_type_error: "Введите год",
+  }),
+  desc: z.string({ required_error: "Это обязательное поле" }),
+  image: z.string({ required_error: "Это обязательное поле" }).min(1),
 });
 
-const genres = [
-  { id: 1, name: "xfgf" },
-  { id: 2, name: "dfhdfb" },
-  { id: 3, name: "xsdfgsfgf" },
-  { id: 4, name: "xfxcvxcvgf" },
-  { id: 5, name: "xfgsdfsf" },
-];
+interface AddBookFormProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-const authors = [
-  { id: 1, name: "erhtsjyk" },
-  { id: 2, name: "sdfg" },
-  { id: 3, name: "esrht" },
-];
-
-export const AddBookForm = () => {
+export const AddBookForm = ({ setOpen }: AddBookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+  const authors = useAuthorStore((state) => state.authors);
+  const genres = useGenreStore((state) => state.genres);
+  const setAllBooks = useBookStore((state) => state.setAllBooks);
+  const allBooks = useBookStore((state) => state.allBooks);
+  const { toast } = useToast();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    form.reset();
+    try {
+      const newBook = await addBook({
+        title: values.title,
+        authorId: authors.find((author) => author.name === values.author).id,
+        genreId: genres.find((genre) => genre.name === values.genre).id,
+        image: values.image,
+        year: values.year,
+        desc: values.desc,
+      });
+      if (newBook) {
+        form.reset();
+        setAllBooks([...allBooks, newBook]);
+        setOpen(false);
+        toast({
+          title: "Книга успешно добавлена",
+        });
+      } else {
+        toast({
+          title: "Ошибка добавления",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

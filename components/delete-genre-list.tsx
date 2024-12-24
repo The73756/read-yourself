@@ -16,36 +16,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "./ui/button";
 import { DeleteGenre } from "./delete-genre";
+import { AuthorGenre } from "@/types/author-genre";
+import { useGenreStore } from "@/store/genre-store";
 
 const formSchema = z.object({
-  author: z.string({required_error: 'Это обязательное поле'}),
+  genre: z.string({ required_error: "Это обязательное поле" }),
 });
 
-const authors = [
-  { id: 1, name: "Проза" },
-  { id: 2, name: "Роман" },
-  { id: 3, name: "Сказка" },
-  { id: 4, name: "Повесть" },
-  { id: 5, name: "Рассказ" },
-];
+interface DeleteGenreListProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-
-export const DeleteGenreList = () => {
+export const DeleteGenreList = ({ setOpen }: DeleteGenreListProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  const [editAuthor, setEditAuthor] = useState<{ id: number; name: string }>();
+  const [editGenre, setEditGenre] = useState<AuthorGenre>();
+  const genres = useGenreStore((state) => state.genres);
 
   useEffect(() => {
-    const selected = authors.find(
-      (author) => author.name === form.getValues("author")
+    const selected = genres.find(
+      (genre) => genre.name === form.getValues("genre")
     );
-    setEditAuthor(selected);
-  }, [form.watch("author")]);
+    setEditGenre(selected);
+  }, [form.watch("genre")]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -60,7 +58,7 @@ export const DeleteGenreList = () => {
         >
           <FormField
             control={form.control}
-            name="author"
+            name="genre"
             render={({ field }) => (
               <FormItem>
                 <Select
@@ -75,9 +73,9 @@ export const DeleteGenreList = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {authors.map((author) => (
-                      <SelectItem key={author.id} value={author.name}>
-                        {author.name}
+                    {genres.map((genre) => (
+                      <SelectItem key={genre.id} value={genre.name}>
+                        {genre.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -88,14 +86,16 @@ export const DeleteGenreList = () => {
           />
         </form>
       </Form>
-      {!editAuthor && (
+      {!editGenre && (
         <DialogClose asChild>
           <Button className="w-full" variant="outline">
             Отмена
           </Button>
         </DialogClose>
       )}
-      {editAuthor && <DeleteGenre key={editAuthor.id} author={editAuthor} />}
+      {editGenre && (
+        <DeleteGenre key={editGenre.id} genre={editGenre} setOpen={setOpen} />
+      )}
     </>
   );
 };
