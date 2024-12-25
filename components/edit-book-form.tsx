@@ -65,8 +65,8 @@ export const EditBookForm = ({ book, setOpen }: EditBookFormProps) => {
       const updatedBook = await editBook({
         id: book.id,
         title: values.title,
-        authorId: authors.find((author) => author.name === values.author).id,
-        genreId: genres.find((genre) => genre.name === values.genre).id,
+        authorId: authors.find((author) => author.name === values.author)!.id,
+        genreId: genres.find((genre) => genre.name === values.genre)!.id,
         image: values.image,
         year: values.year,
         desc: values.desc,

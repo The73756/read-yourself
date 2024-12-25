@@ -9,7 +9,7 @@ interface AdminCheckProps {
 
 export const AdminCheck = ({ children }: AdminCheckProps) => {
   const router = useRouter();
-  const userData = localStorage.getItem("user");
+  const userData = typeof window !== "undefined" ? localStorage.getItem("user") : '';
   const user = userData ? JSON.parse(userData) : null;
   const setIsAuth = useUserStore((state) => state.setIsAuth);
   const setUser = useUserStore((state) => state.setUser);

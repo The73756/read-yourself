@@ -64,7 +64,6 @@ export const BookPagination = ({ count }: BookPaginationProps) => {
                 <PaginationLink
                   isActive={page === currentPage}
                   onClick={() => paginationHandler(page)}
-                  href=""
                 >
                   {page}
                 </PaginationLink>

@@ -14,14 +14,17 @@ export const AuthCheckWrapper = ({ children }: AuthCheckProps) => {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setUser(JSON.parse(user));
-      setIsAuth(true);
-      setChecked(true);
-    } else {
-      router.back();
+    if(typeof window !== 'undefined') {
+      const user = localStorage.getItem("user");
+      if (user) {
+        setUser(JSON.parse(user));
+        setIsAuth(true);
+        setChecked(true);
+      } else {
+        router.back();
+      }
     }
+
   }, []);
 
   return checked ? children : null;

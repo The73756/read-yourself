@@ -59,8 +59,8 @@ export const getAllRequests = async () => {
 
 export const createRequest = async (
   userId: number,
-  returnDate: Date,
-  createDate: Date,
+  returnDate: string | Date,
+  createDate: string | Date,
   books: Book[]
 ) => {
   try {

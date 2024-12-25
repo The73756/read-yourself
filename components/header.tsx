@@ -7,6 +7,7 @@ import { CustomDialog } from "./custom-dialog";
 import { CreateRequestForm } from "./create-request-form";
 import { useUserStore } from "@/store/user-store";
 import { DialogClose } from "./ui/dialog";
+import { User } from "@/types/user";
 
 export const Header = () => {
   const auth = useUserStore((state) => state.isAuth);
@@ -15,7 +16,7 @@ export const Header = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   const logout = () => {
-    setUser({});
+    setUser({}  as User );
     setIsAuth(false);
     localStorage.removeItem("user");
   };
