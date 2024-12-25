@@ -108,7 +108,7 @@ export const CreateRequestForm = ({currentBooks}: CreateRequestFormProps) => {
       <DialogClose asChild>
         <Button
           className="w-full"
-          disabled={requestBooks.length <= 0 || date == undefined}
+          disabled={requestBooks?.length <= 0 || date == undefined}
           onClick={submitForm}
         >
           Создать заявку

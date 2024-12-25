@@ -12,7 +12,7 @@ export const AdminRequest = () => {
     setAdminRequests(allRequests.filter(req => req.status.name === "В обработке" || req.status.name === "Принято"))
   }, [allRequests])
 
-  if (adminRequests.length > 0) {
+  if (adminRequests?.length > 0) {
     return (
       <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
         {adminRequests.map((request) => (

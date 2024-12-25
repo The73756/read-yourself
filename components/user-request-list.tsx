@@ -48,10 +48,10 @@ export const UserRequestList = ({data}: UserRequestListProps) => {
     fetchRequests();
   }, []);
 
-  if (requests.length > 0) {
+  if (requests?.length > 0) {
     return (
       <div className="flex flex-col gap-14">
-        {processRequests.length > 0 && (
+        {processRequests?.length > 0 && (
           <div>
             <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
               На подтверждении
@@ -63,7 +63,7 @@ export const UserRequestList = ({data}: UserRequestListProps) => {
             </div>
           </div>
         )}
-        {activeRequests.length > 0 && (
+        {activeRequests?.length > 0 && (
           <div>
             <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
               Текущие заявки
@@ -75,7 +75,7 @@ export const UserRequestList = ({data}: UserRequestListProps) => {
             </div>
           </div>
         )}
-        {rejectedRequests.length > 0 && (
+        {rejectedRequests?.length > 0 && (
           <div>
             <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
               Отклоненные заявки
@@ -87,7 +87,7 @@ export const UserRequestList = ({data}: UserRequestListProps) => {
             </div>
           </div>
         )}
-        {finishRequests.length > 0 && (
+        {finishRequests?.length > 0 && (
           <div>
             <h3 className="mb-10 font-bold text-2xl text-brown sm:text-3xl">
               История выполненных заявок
