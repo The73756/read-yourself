@@ -1,5 +1,5 @@
 "use client";
-import { useBookStore } from "@/store/book-store";
+import {useBookStore} from "@/store/book-store";
 import {
   Pagination,
   PaginationContent,
@@ -8,17 +8,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useEffect } from "react";
-import { getBooks } from "@/api";
-import { GetBooksResponse } from "@/types/book";
-import { useGenreStore } from "@/store/genre-store";
-import { useAuthorStore } from "@/store/author-store";
+import {useEffect} from "react";
+import {getBooks} from "@/api";
+import {GetBooksResponse} from "@/types/book";
+import {useGenreStore} from "@/store/genre-store";
+import {useAuthorStore} from "@/store/author-store";
 
 interface BookPaginationProps {
   count: number;
 }
 
-export const BookPagination = ({ count }: BookPaginationProps) => {
+export const BookPagination = ({count}: BookPaginationProps) => {
   const pages = useBookStore((state) => state.pages);
   const search = useBookStore((state) => state.search);
   const sort = useBookStore((state) => state.sort);
@@ -35,8 +35,9 @@ export const BookPagination = ({ count }: BookPaginationProps) => {
   }, [count]);
 
   const paginationHandler = async (page: number) => {
+    console.log(page)
     setCurrentPage(page);
-    const { books } = (await getBooks(
+    const {books} = (await getBooks(
       search,
       page,
       ...sort.split(" "),
@@ -58,8 +59,8 @@ export const BookPagination = ({ count }: BookPaginationProps) => {
               onClick={() => paginationHandler(currentPage - 1)}
             />
           </PaginationItem>
-          {Array.from({ length: pages }, (_, index) => index + 1).map(
-            (page) => (
+          {Array.from({length: pages}, (_, index) => index + 1).map(
+            (page) =>
               <PaginationItem key={page}>
                 <PaginationLink
                   isActive={page === currentPage}
@@ -68,7 +69,6 @@ export const BookPagination = ({ count }: BookPaginationProps) => {
                   {page}
                 </PaginationLink>
               </PaginationItem>
-            )
           )}
           <PaginationItem>
             <PaginationNext

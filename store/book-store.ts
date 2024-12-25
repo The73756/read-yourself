@@ -1,5 +1,5 @@
-import { Book } from "@/types/book";
-import { create } from "zustand";
+import {Book} from "@/types/book";
+import {create} from "zustand";
 
 interface BookState {
   books: Book[];
@@ -23,10 +23,10 @@ export const useBookStore = create<BookState>()((set) => ({
   currentPage: 1,
   search: "",
   sort: "title asc",
-  setBooks: (books) => set({ books: books }),
-  setAllBooks: (books) => set({ allBooks: books }),
-  setPages: (totalCount) => set({ pages: Math.ceil(totalCount / 4) }),
-  setCurrentPage: (page) => set({ currentPage: page }),
-  setSearch: (search) => set({ search: search }),
-  setSort: (sort) => set({ sort: sort }),
+  setBooks: (books) => set({books: books}),
+  setAllBooks: (books) => set({allBooks: books}),
+  setPages: (totalCount) => set({pages: Math.ceil(totalCount / 10)}),
+  setCurrentPage: (page) => set({currentPage: page}),
+  setSearch: (search) => set({search: search}),
+  setSort: (sort) => set({sort: sort}),
 }));
