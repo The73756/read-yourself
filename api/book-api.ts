@@ -35,7 +35,7 @@ export const getBooks = async (
       const books = await res.json();
 
       return {
-        books: books,
+        books: books || {},
         totalCount: Number(res.headers.get("x-total-count")),
       };
     }

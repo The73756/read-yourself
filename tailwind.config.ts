@@ -17,7 +17,7 @@ const config: Config = {
       "2xl": "1536px",
     },
     container: {
-      center: "true",
+      center: true,
       padding: "1rem",
       screens: {
         xs: "100%",

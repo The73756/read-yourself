@@ -7,6 +7,7 @@ import {CreateRequestForm} from "@/components/create-request-form";
 import {CustomDialog} from "@/components/custom-dialog";
 import {deleteRequest} from "@/api/request-api";
 import {useRequestStore} from "@/store/request-store";
+import {Book} from "@/types/book";
 
 interface RequestCardProps {
   request: Request;
@@ -53,7 +54,7 @@ export const RequestCard = ({request}: RequestCardProps) => {
               <BookDialog
                 book={allBooks.find(
                   (currentBook) => currentBook.id === book.bookId
-                )}
+                ) as Book}
               />
             )}
             <p className="text-brown">
@@ -77,7 +78,7 @@ export const RequestCard = ({request}: RequestCardProps) => {
           >
             <CreateRequestForm
               currentBooks={request.requestBooks.map(
-                reqBook => allBooks.find((b) => b.id === reqBook.bookId))
+                reqBook => allBooks.find((b) => b.id === reqBook.bookId)) as Book[]
               }
             />
           </CustomDialog>

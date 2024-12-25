@@ -18,7 +18,7 @@ export const BookList = ({ data }: BookListProps) => {
     setAllBooks(data.allBooks);
   }, [data]);
 
-  if (books.length > 0)
+  if (books?.length > 0)
     return (
       <div className="gap-8 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
         {books && books.map((book) => <BookCard key={book.id} book={book} />)}

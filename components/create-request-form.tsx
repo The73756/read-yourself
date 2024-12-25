@@ -24,10 +24,10 @@ export const CreateRequestForm = ({currentBooks}: CreateRequestFormProps) => {
 
   const [date, setDate] = useState<Date>();
   const [selectedBooks, setSelectedBooks] = useState<Book[]>(
-    currentBooks?.length > 0 ? currentBooks : []
+    currentBooks?.length && currentBooks?.length > 0 ? currentBooks : []
   );
   const [requestBooks, setRequestBooks] = useState<Book[]>(
-    currentBooks?.length > 0 ? currentBooks : []
+    currentBooks?.length && currentBooks?.length > 0 ? currentBooks : []
   );
   const [value, setValue] = useState("")
 
@@ -62,7 +62,7 @@ export const CreateRequestForm = ({currentBooks}: CreateRequestFormProps) => {
     try {
       const res = await createRequest(
         user.id,
-        format(date, "dd.MM.yyyy"),
+        format(date || new Date() , "dd.MM.yyyy"),
         format(new Date(), "dd.MM.yyyy"),
         requestBooks
       );
@@ -108,7 +108,7 @@ export const CreateRequestForm = ({currentBooks}: CreateRequestFormProps) => {
       <DialogClose asChild>
         <Button
           className="w-full"
-          disabled={requestBooks.length <= 0 || date == undefined}
+          disabled={requestBooks?.length <= 0 || date == undefined}
           onClick={submitForm}
         >
           Создать заявку

@@ -9,7 +9,7 @@ import { Book, GetBooksResponse } from "@/types/book";
 import { Footer } from "@/components/footer";
 
 export default async function Home() {
-  const { books, totalCount } = (await getBooks()) as GetBooksResponse;
+  const booksData = (await getBooks()) as GetBooksResponse;
   const allBooks = (await getAllBooks()) as Book[];
   const authors = (await getAuthors()) as AuthorGenre[];
   const genres = (await getGenres()) as AuthorGenre[];
@@ -21,8 +21,8 @@ export default async function Home() {
         <div className="mb-8 h-full container">
           <Filters data={{ authors, genres }} />
           <div className="flex flex-col gap-14 mt-16">
-            <BookList data={{ books, allBooks }} />
-            <BookPagination count={totalCount} />
+            <BookList data={{ books: booksData?.books, allBooks }} />
+            <BookPagination count={booksData?.totalCount} />
           </div>
         </div>
         <Footer />

@@ -7,6 +7,7 @@ import {useRequestStore} from "@/store/request-store";
 import {updateStatus} from "@/api/request-api";
 import {useUserStore} from "@/store/user-store";
 import {useEffect, useState} from "react";
+import {Book} from "@/types/book";
 
 interface RequestCardProps {
   request: Request;
@@ -78,7 +79,7 @@ export const AdminRequestCard = ({request}: RequestCardProps) => {
               <BookDialog
                 book={allBooks.find(
                   (currentBook) => currentBook.id === book.bookId
-                )}
+                ) as Book}
               />
             )}
             <p className="text-brown">
