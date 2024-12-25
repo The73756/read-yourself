@@ -52,12 +52,18 @@ export const AddBookForm = ({ setOpen }: AddBookFormProps) => {
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const authorId = authors.find((author) => author.name === values.author)?.id;
+    const genreId = genres.find((genre) => genre.name === values.genre)?.id;
+
+    if (!authorId || !genreId) {
+      return console.error("Author or genre not found");
+    }
+
     try {
       const newBook = await addBook({
         title: values.title,
-        authorId: authors.find((author) => author.name === values.author).id,
-        genreId: genres.find((genre) => genre.name === values.genre).id,
+        authorId: authorId,
+        genreId: genreId,
         image: values.image,
         year: values.year,
         desc: values.desc,
