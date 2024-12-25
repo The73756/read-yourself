@@ -1,4 +1,4 @@
-import { apiUrl } from ".";
+import {apiUrl} from ".";
 
 export const getBooks = async (
   search = "",
@@ -12,11 +12,11 @@ export const getBooks = async (
     if (apiUrl) {
       const res = await fetch(
         apiUrl +
-          `/books?_expand=author&_expand=genre&title_like=${search}${
-            authorId && `&authorId=${authorId}`
-          }${
-            genreId && `&genreId=${genreId}`
-          }&_page=${page}&_limit=4&_sort=${sort}&_order=${order}`,
+        `/books?_expand=author&_expand=genre&title_like=${search}${
+          authorId && `&authorId=${authorId}`
+        }${
+          genreId && `&genreId=${genreId}`
+        }&_page=${page}&_limit=10&_sort=${sort}&_order=${order}`,
         {
           method: "GET",
           headers: {
