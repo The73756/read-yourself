@@ -1,5 +1,5 @@
-import { AuthorGenre } from "@/types/author-genre";
-import { apiUrl } from ".";
+import {AuthorGenre} from "@/types/author-genre";
+import {apiUrl} from ".";
 
 export const getGenres = async () => {
   try {
@@ -10,7 +10,7 @@ export const getGenres = async () => {
           "Content-Type": "application/json",
         },
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["genre"],
         },
       });
