@@ -53,7 +53,7 @@ export const getAllBooks = async () => {
           "Content-Type": "application/json",
         },
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["book"],
         },
       });
