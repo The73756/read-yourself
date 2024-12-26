@@ -25,7 +25,7 @@ export const useBookStore = create<BookState>()((set) => ({
   sort: "title asc",
   setBooks: (books) => set({books: books}),
   setAllBooks: (books) => set({allBooks: books}),
-  setPages: (totalCount) => set({pages: Math.ceil(totalCount / 10)}),
+  setPages: (totalCount) => set({pages: Math.ceil(totalCount / 6)}),
   setCurrentPage: (page) => set({currentPage: page}),
   setSearch: (search) => set({search: search}),
   setSort: (sort) => set({sort: sort}),

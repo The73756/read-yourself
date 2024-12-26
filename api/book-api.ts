@@ -16,7 +16,7 @@ export const getBooks = async (
           authorId && `&authorId=${authorId}`
         }${
           genreId && `&genreId=${genreId}`
-        }&_page=${page}&_limit=10&_sort=${sort}&_order=${order}`,
+        }&_page=${page}&_limit=6&_sort=${sort}&_order=${order}`,
         {
           method: "GET",
           headers: {
