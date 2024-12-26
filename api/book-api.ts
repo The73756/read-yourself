@@ -85,7 +85,7 @@ export const addBook = async (book: {
         },
         body: JSON.stringify(book),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["book"],
         },
       });
@@ -118,7 +118,7 @@ export const editBook = async (book: {
         },
         body: JSON.stringify(book),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["book"],
         },
       });
@@ -142,7 +142,7 @@ export const deleteBook = async (id: number) => {
           "Content-Type": "application/json",
         },
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["book"],
         },
       });

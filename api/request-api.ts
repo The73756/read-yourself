@@ -13,7 +13,7 @@ export const getRequests = async (userId: number) => {
             "Content-Type": "application/json",
           },
           next: {
-            revalidate: false,
+            revalidate: 0,
             tags: ["request"],
           },
         }
@@ -41,7 +41,7 @@ export const getAllRequests = async () => {
             "Content-Type": "application/json",
           },
           next: {
-            revalidate: false,
+            revalidate: 0,
             tags: ["request"],
           },
         }
@@ -77,7 +77,7 @@ export const createRequest = async (
           statusId: 1,
         }),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["request"],
         },
       });
@@ -108,7 +108,7 @@ export const createRequest = async (
               requestId: requestData.id,
             }),
             next: {
-              revalidate: false,
+              revalidate: 0,
               tags: ["request"],
             },
           });
@@ -167,7 +167,7 @@ export const deleteRequest = async (requestId: number) => {
             "Content-Type": "application/json",
           },
           next: {
-            revalidate: false,
+            revalidate: 0,
             tags: ["request"],
           },
         }

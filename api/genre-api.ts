@@ -34,7 +34,7 @@ export const addGenre = async (genre: { name: string }) => {
         },
         body: JSON.stringify(genre),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["genre"],
         },
       });
@@ -59,7 +59,7 @@ export const editGenre = async (genre: AuthorGenre) => {
         },
         body: JSON.stringify(genre),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["genre"],
         },
       });
@@ -83,7 +83,7 @@ export const deleteGenre = async (id: number) => {
           "Content-Type": "application/json",
         },
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["genre"],
         },
       });

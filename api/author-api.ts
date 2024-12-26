@@ -34,7 +34,7 @@ export const addAuthor = async (author: { name: string }) => {
         },
         body: JSON.stringify(author),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["author"],
         },
       });
@@ -59,7 +59,7 @@ export const editAuthor = async (author: AuthorGenre) => {
         },
         body: JSON.stringify(author),
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["author"],
         },
       });
@@ -83,7 +83,7 @@ export const deleteAuthor = async (id: number) => {
           "Content-Type": "application/json",
         },
         next: {
-          revalidate: false,
+          revalidate: 0,
           tags: ["author"],
         },
       });
